@@ -19,7 +19,7 @@ if ( !function_exists( 'add_action' ) ) {
 	exit;
 }
 
-define( 'A2IMPORTER_VERSION', '3.0.1' );
+define( 'A2IMPORTER_VERSION', '0.0.8' );
 define( 'A2IMPORTER__MINIMUM_WP_VERSION', '3.1' );
 define( 'A2IMPORTER__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'A2IMPORTER__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
