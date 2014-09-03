@@ -21,11 +21,37 @@ class A2importerAdmin {
 		add_action( 'admin_init', array('A2importerAdmin', 'register_plugin_settings'));
 		add_action( 'admin_init', array('A2importerAdmin', 'register_plugin_import_log'));
 		add_action( 'admin_init', array('A2importerAdmin', 'register_plugin_post_list'));
+		add_action( 'admin_init', array('A2importerAdmin', 'register_plugin_optiones'));
 		add_action( 'admin_menu', array('A2importerAdmin', 'admin_menu'), 5);
 	}
 
 	public static function admin_menu() {
 		add_submenu_page('tools.php', 'A2importer','A2 import tool', 'manage_options', 'a2importer', array( 'A2importerAdmin', 'display_page' ) );
+	}
+
+	public static function register_plugin_optiones() {
+		add_option( 'a2iported_posts', '');
+
+		add_option( 'a2idb-name', '');
+		add_option( 'a2idb-host', '');
+		add_option( 'a2idb-user', '');
+		add_option( 'a2idb-pass', '');
+		register_setting( 'a2idb', 'a2idb-name' );
+		register_setting( 'a2idb', 'a2idb-host' );
+		register_setting( 'a2idb', 'a2idb-user' );
+		register_setting( 'a2idb', 'a2idb-pass' );
+
+		add_option( 'a2itime-period', 'overall');
+		add_option( 'a2itime-from', '');
+		add_option( 'a2itime-to', '');
+		register_setting( 'a2itime', 'a2itime-period' );
+		register_setting( 'a2itime', 'a2itime-from' );
+		register_setting( 'a2itime', 'a2itime-to' );
+
+		add_option( 'a2cron-set', '0');
+		add_option( 'a2icron-period', '');
+		register_setting( 'a2icron', 'a2cron-set' );
+		register_setting( 'a2icron', 'a2cron-period' );
 	}
 
 	public static function register_plugin_settings() {
