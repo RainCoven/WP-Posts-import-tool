@@ -24,7 +24,7 @@ class CustomPostsImporter {
 	private static $_idMatchList;
 	private static $_postsData;
 	private static $_images;
-	private static $_date;
+	private static $_date = array();
 	private static $_targetTax;
 
 
@@ -34,9 +34,10 @@ class CustomPostsImporter {
 	public function __construct() {
 		self::_setEnvVars();
 		global $wpdb;
-		$date = new DateTime();
-		$date->add(DateInterval::createFromDateString('yesterday'));
-		self::$_date = $date->format('Y-m-d 00:00:00');
+		self::$_date = array(
+			'from' => get_option('a2itime-from') . ' 00:00:00',
+			'to' => ''
+		);
 
 		$Log = Logger::getInstance();
 		$QueryBuilder = QueryBuilder::getInstance();
@@ -47,7 +48,7 @@ class CustomPostsImporter {
 		$this->synchronizeTaxonomies();
 
 		$Log->logWrite("Start importing process");
-		$Log->logWrite("Trying to get posts from " . self::$_date);
+		$Log->logWrite("Trying to get posts from " . self::$_date['from']);
 		
 		// Get raw posts data from remote DB and formatting
 		if(!$this->getPostsData()) {
@@ -92,18 +93,19 @@ class CustomPostsImporter {
 		// Get ID's of inserted images and their original post parent ID
 		$insertedImages = $this->getInsertedImages($maxId);
 
-		// Copying image files from remote server
-		$this->copyImageFiles();
+		if(!empty(self::$_images)) {
+			// Copying image files from remote server
+			$this->copyImageFiles();
 
-		// Update images data to use new ID's
-		$this->setIdsToTheImages($insertedImages);
+			// Update images data to use new ID's
+			$this->setIdsToTheImages($insertedImages);
 
-		// Generating Insert post meta query
-		$query = QueryBuilder::buildImportMetaQuery(self::$_images);
-		$Log->logWrite('Generating import images meta query: ' . ($query ? 'OK' : 'ERROR'));
-		$wpdb->query($query) ? $Log->logWrite('Inserting images meta: OK') : $Log->logWrite('Inserting images meta: ERROR!');
+			// Generating Insert post meta query
+			$query = QueryBuilder::buildImportMetaQuery(self::$_images);
+			$Log->logWrite('Generating import images meta query: ' . ($query ? 'OK' : 'ERROR'));
+			$wpdb->query($query) ? $Log->logWrite('Inserting images meta: OK') : $Log->logWrite('Inserting images meta: ERROR!');
+		}
 
-		pr('К ЭТОМУ МОМЕНТУ НАДО ПОДМЕНИТЬ TERM_ID НА TAX_TERM_ID >>>>>>>>>>>>>>>>>>>>>++++++++++++++++++++++++++++++++++++++++');
 		// Generating Insert post category query
 		$query = QueryBuilder::buildImportCatsQuery(self::$_postsData);
 		$Log->logWrite('Generating import categories query: ' . ($query ? 'OK' : 'ERROR'));
@@ -213,17 +215,17 @@ class CustomPostsImporter {
 		);
 
 		// Get post attachments ids
-		$query = $QueryBuilder::_getPostChildImagesIds(self::$_date);
+		$query = $QueryBuilder::_getPostChildImagesIds(self::$_date['from']);
 		$Log->logWrite("Getting posts attachment ids: " . ($query ? 'OK' : 'ERROR'));
 		$images['children'] = $RemoteDB->runQuery($query);
 
 		// Get post child image ids
-		$query = $QueryBuilder::_getSlideImageIds(self::$_date);
+		$query = $QueryBuilder::_getSlideImageIds(self::$_date['from']);
 		$Log->logWrite("Getting slideshow posts attachment ids: " . ($query ? 'OK' : 'ERROR'));
 		$images['slides'] = $RemoteDB->runQuery($query);
 
 		// Get slide show post image ids
-		$query = $QueryBuilder::_getPostThumbsIds(self::$_date);
+		$query = $QueryBuilder::_getPostThumbsIds(self::$_date['from']);
 		$Log->logWrite("Getting posts thumbnail ids: " . ($query ? 'OK' : 'ERROR'));
 		$images['thumbs'] = $RemoteDB->runQuery($query);
 
@@ -235,7 +237,7 @@ class CustomPostsImporter {
 		$query = $QueryBuilder->buildExportImagesQuery($ids);
 		$Log->logWrite("Building export images query: " . ($query ? 'OK' : 'ERROR'));
 
-		$imageData = $RemoteDB->runQuery($query);
+		$imageData = empty($ids) ? null : $RemoteDB->runQuery($query);
 
 		if (empty($imageData)) {
 			$Log->logWrite("No images to import");
@@ -395,7 +397,7 @@ class CustomPostsImporter {
 			if(!array_key_exists('_wp_attachment_metadata', $image['meta'])) { continue; }
 			$imageRevisions = unserialize($image['meta']['_wp_attachment_metadata']);
 			$originUploadDir = dirname($image['post']['guid']);
-			if(copy($image['post']['guid'], $targetUploadDir['path'] . '/' . $imageRevisions['file'])) { $i++; }
+			if(copy($image['post']['guid'], $targetUploadDir['basedir'] . '/' . $imageRevisions['file'])) { $i++; }
 
 			foreach ($imageRevisions['sizes'] as $size) {
 				if(copy($originUploadDir . '/' . $size['file'], $targetUploadDir['path'] . '/' . $size['file'])) { $i++; }
