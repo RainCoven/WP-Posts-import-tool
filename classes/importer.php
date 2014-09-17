@@ -464,17 +464,15 @@ class CustomPostsImporter {
 		foreach ($originTax as $origin) {
 			$matched = false;
 			foreach($targetTax as $target) {
-				if ($origin['slug'] == $target['slug'] && $origin['taxonomy'] == ($target['taxonomy'])) {
-					$dif[$origin['term_taxonomy_id']] = $target['term_id'];
+				if (($origin['slug'] == $target['slug']) && ($origin['taxonomy'] == $target['taxonomy'])) {
+					$dif[$origin['term_taxonomy_id']] = $target['term_taxonomy_id'];
 					$matched = true;
 					break;
 				}
 			}
 			if(!$matched) { $unmatched[] = $origin; }
 		}
-
 		self::$_entitiesMatchList['cats'] = $dif;
-
 		return $unmatched;
 	}
 
@@ -491,17 +489,6 @@ class CustomPostsImporter {
 			$slugs[] = $tax['slug'];
 		}
 		return $slugs;
-	}
-
-	private function convert_terms_to_tax() {
-		$targetTax = self::$_targetTax;
-		$termTax = array();
-		foreach ($targetTax as $term) {
-			$termTax[$term['term_id']] = $term['term_taxonomy_id'];
-		}
-		foreach(self::$_entitiesMatchList['cats'] as $i=>$tax) {
-			self::$_entitiesMatchList['cats'][$i] = $termTax[$tax];
-		}
 	}
 
 	/**
@@ -546,7 +533,6 @@ class CustomPostsImporter {
 
 			$unmatched = $this->getTax();
 		}
-		$this->convert_terms_to_tax();
 		return true;
 	}
 }
