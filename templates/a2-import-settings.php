@@ -1,4 +1,34 @@
 <form method="post" action="options.php" novalidate="novalidate">
+	<h3>Start import</h3>
+	<hr>
+	<p class="submit">
+		<input type="submit" id="startImport" name="start_import" class="button button-primary js-start-import" value="start">
+	</p>
+	<p class="js-import-message"></p>
+	<br>
+	<script>
+		jQuery(function() {
+			'use_strict';
+			var $button = jQuery('.js-start-import');
+
+			$button.on('click', function(e) {
+				jQuery('.js-import-message').text('Import started...');
+				var data = {
+					action: 'on_start_import'
+				};
+				jQuery.ajax({
+					url: ajaxurl,
+					data:  data,
+					success: function(response) {
+						console.log(response);
+						jQuery('.js-import-message').text('Import finished. See import log for more details.');
+						if (response.length == 0) { return false; }
+					}
+				});
+			});
+		});
+	</script>
+
 	<h3>Database Settings</h3>
 	<hr>
 	<?php settings_fields('a2idb'); ?>
