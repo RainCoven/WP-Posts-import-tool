@@ -23,7 +23,8 @@ class RemoteDbConnect {
 	private static $_singleton;
 
 	private function __construct() {
-		$creds = self::_setCredentials();
+		self::_setCredentials();
+		$creds = self::$_credentials;
 		$this->_connect(
 			$creds['host'],
 			$creds['user'],
@@ -67,14 +68,12 @@ class RemoteDbConnect {
 		$log = Logger::getInstance();
 		try {
 			$this->dbh = new PDO( "mysql:host=$host;dbname=$db", $user, $pass );
-
-			$log->logWrite('Connected to remote DB: OK');
-
-			return true;
 		} catch ( PDOException $e ) {
 			$log->logWrite('Connected to remote DB: ERROR! : ' . $e->getMessage());
 			return $e->getMessage();
 		}
+		$log->logWrite('Connected to remote DB: OK');
+		return true;
 	}
 
 	public function disconnect() {
@@ -85,7 +84,7 @@ class RemoteDbConnect {
 		if(!empty($newCredentials)) {
 			self::$_credentials = $newCredentials;
 		} else {
-			$creds = array(
+			self::$_credentials = array(
 				'host' => get_option('a2idb-host'),
 				'user' => get_option('a2idb-user'),
 				'pass' => get_option('a2idb-pass'),
