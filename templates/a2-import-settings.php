@@ -3,6 +3,7 @@
 	<hr>
 	<?php settings_fields('a2idb'); ?>
 	<?php do_settings_sections('a2idb'); ?>
+	<?php 	$RemoteDB = RemoteDbConnect::_getInstance(); ?>
 	<table class="form-table">
 		<tbody>
 			<tr>
