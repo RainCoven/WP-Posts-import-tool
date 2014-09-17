@@ -23,7 +23,7 @@ class RemoteDbConnect {
 	private static $_singleton;
 
 	private function __construct() {
-		$creds = self::$_credentials;
+		$creds = self::_setCredentials();
 		$this->_connect(
 			$creds['host'],
 			$creds['user'],
@@ -82,6 +82,16 @@ class RemoteDbConnect {
 	}
 
 	public static function _setCredentials($newCredentials = array()) {
-		self::$_credentials = $newCredentials;
+		if(!empty($newCredentials)) {
+			self::$_credentials = $newCredentials;
+		} else {
+			$creds = array(
+				'host' => get_option('a2idb-host'),
+				'user' => get_option('a2idb-user'),
+				'pass' => get_option('a2idb-pass'),
+				'db' => get_option('a2idb-name')
+			);
+			print_r($creds); exit;
+		}
 	}
 }
