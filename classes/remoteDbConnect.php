@@ -91,7 +91,6 @@ class RemoteDbConnect {
 				'pass' => get_option('a2idb-pass'),
 				'db' => get_option('a2idb-name')
 			);
-			print_r($creds); exit;
 		}
 	}
 }
