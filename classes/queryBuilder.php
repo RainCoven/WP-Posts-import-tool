@@ -13,12 +13,12 @@ class QueryBuilder {
 	/**
 	 * Generating SQL query to get all of yesterday's posts from remote db
 	 *
-	 * @return string
+	 * @param array $date
+	 *
+	 * @return bool|string
 	 */
-	public static function buildExportPostsQuery($date = '') {
+	public static function buildExportPostsQuery($date = array()) {
 		if (empty($date)) { return false; };
-
-		$today = date("Y-m-d 00:00:00");
 
 		$query = "
 			SELECT wp_posts.*, wp_term_taxonomy.term_id, wp_term_taxonomy.`term_taxonomy_id`,
@@ -34,8 +34,8 @@ class QueryBuilder {
 
 		    WHERE wp_posts.post_status = 'publish'
 		    AND wp_posts.post_type = 'post'
-		    AND wp_posts.post_date > '{$date}'
-		   -- AND wp_posts.post_date < '{$today}'
+		    AND wp_posts.post_date > '{$date['from']}'
+		   -- AND wp_posts.post_date < '{$date['to']}'
 
 		    ORDER BY wp_posts.post_date ASC
 		";
@@ -65,8 +65,6 @@ class QueryBuilder {
 	public static function _getPostChildImagesIds($date = '') {
 		if (empty($date)) { return false; };
 
-		$today = date("Y-m-d 00:00:00");
-
 		$query = "
 			SELECT DISTINCT images.id
 			FROM wp_posts AS images
@@ -77,7 +75,7 @@ class QueryBuilder {
 			WHERE posts.post_status = 'publish'
 			AND posts.post_type = 'post'
 			AND posts.post_date > '{$date}'
-			AND posts.post_date < '{$today}'
+			-- AND posts.post_date < '{}'
 			ORDER BY posts.id ASC
 		";
 		return $query;
@@ -143,7 +141,7 @@ class QueryBuilder {
 				`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`,
 				`post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`,
 				`pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`,
-				`guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`, `robotsmeta`
+				`guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`
 			)
 			VALUES
 		";
@@ -152,13 +150,14 @@ class QueryBuilder {
 			'post_author', 'post_date', 'post_date_gmt', 'post_content', 'post_title', 'post_excerpt',
 			'post_status', 'comment_status', 'ping_status', 'post_password', 'post_name', 'to_ping',
 			'pinged', 'post_modified', 'post_modified_gmt', 'post_content_filtered', 'post_parent',
-			'guid', 'menu_order', 'post_type', 'post_mime_type', 'comment_count', 'robotsmeta'
+			'guid', 'menu_order', 'post_type', 'post_mime_type', 'comment_count'
 		);
 
 		foreach ($data as $post) {
 			$query .= "(";
 			foreach ($postFields as $field) {
-				$query .= is_numeric($post['post'][$field]) ? $post['post'][$field] . ',' : $RemoteDB->dbh->quote($post['post'][$field]) . ",";
+				$query .= is_numeric($post['post'][$field]) ? $post['post'][$field] . ',' :
+					$RemoteDB->dbh->quote($post['post'][$field]) . ",";
 			}
 			$query = rtrim($query, ",");
 			$query .= "),";
