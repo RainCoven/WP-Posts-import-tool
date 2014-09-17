@@ -133,14 +133,15 @@ class CustomPostsImporter {
 		foreach ($raw as $data) {
 			if (!array_key_exists($data['ID'], $posts)) {
 				// Replace author ID to the one used on current website
-				$data['post_author'] = self::$_entitiesMatchList['users'][$data['post_author']];
+				// TODO: Replace stab on user detect functionality
+				$data['post_author'] = 1;//self::$_entitiesMatchList['users'][$data['post_author']];
 
 				if($data['post_type'] == 'post') {
 					// Replace images url to CDN one
 					//$data['post_content'] = str_replace('src="' . self::$_url['origin'], 'src="' . self::$_url['target'], $data['post_content']);
 
 					// Adding reference to the original post
-					$data['post_content'] = $data['post_content'] . '<br><a title="View original post on http://blog.spafinder.com" target="_blank" class="b-link" style="font-size: 12px;" href="http://blog.spafinder.com/' . $data['post_name'] . '/">View original post</a>';
+//					$data['post_content'] = $data['post_content'] . '<br><a title="View original post on http://example.com" target="_blank" class="b-link" style="font-size: 12px;" href="http://mysite.com/' . $data['post_name'] . '/">View original post</a>';
 				}
 
 				$posts[$data['ID']]['post'] = array_slice($data, 0, 24);
@@ -409,6 +410,7 @@ class CustomPostsImporter {
 	 *  Setup env vars
 	 */
 	private static function _setEnvVars() {
+		return true;
 		switch ($_SERVER['HTTP_HOST']) {
 			case 'wpimport' :
 				self::$_url['origin'] = 'http://wordpress';
