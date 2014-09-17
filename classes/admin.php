@@ -18,11 +18,12 @@ class A2importerAdmin {
 
 	public static function init_hooks() {
 		self::$initiated = true;
-		add_action( 'admin_init', array('A2importerAdmin', 'register_plugin_settings'));
-		add_action( 'admin_init', array('A2importerAdmin', 'register_plugin_import_log'));
-		add_action( 'admin_init', array('A2importerAdmin', 'register_plugin_post_list'));
-		add_action( 'admin_init', array('A2importerAdmin', 'register_plugin_optiones'));
-		add_action( 'admin_menu', array('A2importerAdmin', 'admin_menu'), 5);
+		add_action('admin_init', array('A2importerAdmin', 'register_plugin_settings'));
+		add_action('admin_init', array('A2importerAdmin', 'register_plugin_import_log'));
+		add_action('admin_init', array('A2importerAdmin', 'register_plugin_post_list'));
+		add_action('admin_init', array('A2importerAdmin', 'register_plugin_optiones'));
+		add_action('admin_init', array('A2importerAdmin', 'create_log_file'));
+		add_action('admin_menu', array('A2importerAdmin', 'admin_menu'), 5);
 	}
 
 	public static function admin_menu() {
@@ -82,5 +83,15 @@ class A2importerAdmin {
 		echo '</h2>';
 		require (A2IMPORTER__PLUGIN_DIR . 'templates/' . $current_tab . '.php');
 		echo '</div>';
+	}
+
+	public static function create_log_file() {
+		$upload_dir = wp_upload_dir();
+		$path = $upload_dir['basedir'] . '/a2import-tool/import.log';
+		if (!file_exists($upload_dir['basedir'] . '/a2import-tool')) {
+			mkdir($upload_dir['basedir'] . '/a2import-tool', 0777, true);
+		}
+		$log = fopen($path, 'a') or die("Can't create import log file");
+		fclose($log);
 	}
 }
