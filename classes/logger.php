@@ -6,7 +6,7 @@ class Logger {
 
 	public function __construct() {
 		$uploadDir = wp_upload_dir();
-		self::$_lName = $uploadDir['path'] . '/import-log/log';
+		self::$_lName = $uploadDir['basedir'] . '/a2import-tool/import.log';
 		$this->logOpen(); //Begin logging.
 	}
 
@@ -18,7 +18,7 @@ class Logger {
 	}
 
 	function __destruct() {
-		fclose(self::$_lName); //Close when php script ends (always better to be proper.)
+		fclose($this->handle); //Close when php script ends (always better to be proper.)
 	}
 
 	//Open Logfile
