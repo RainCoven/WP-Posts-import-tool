@@ -20,7 +20,8 @@ class A2importerAdmin {
 		self::$initiated = true;
 		add_action('admin_init', array('A2importerAdmin', 'register_plugin_settings'));
 		add_action('admin_init', array('A2importerAdmin', 'register_plugin_import_log'));
-		add_action('admin_init', array('A2importerAdmin', 'register_plugin_post_list'));
+//		TODO: Save imported posts id's
+//		add_action('admin_init', array('A2importerAdmin', 'register_plugin_post_list'));
 		add_action('admin_init', array('A2importerAdmin', 'register_plugin_optiones'));
 		add_action('admin_init', array('A2importerAdmin', 'create_log_file'));
 		add_action('admin_menu', array('A2importerAdmin', 'admin_menu'), 5);
@@ -42,17 +43,19 @@ class A2importerAdmin {
 		register_setting( 'a2idb', 'a2idb-user' );
 		register_setting( 'a2idb', 'a2idb-pass' );
 
-		add_option( 'a2itime-period', 'overall');
+//		TODO: Add flexible time period options
+//		add_option( 'a2itime-period', 'overall');
 		add_option( 'a2itime-from', '');
 		add_option( 'a2itime-to', '');
 		register_setting( 'a2itime', 'a2itime-period' );
 		register_setting( 'a2itime', 'a2itime-from' );
 		register_setting( 'a2itime', 'a2itime-to' );
 
-		add_option( 'a2cron-set', '0');
-		add_option( 'a2icron-period', '');
-		register_setting( 'a2icron', 'a2cron-set' );
-		register_setting( 'a2icron', 'a2cron-period' );
+//		TODO: Add cron settings
+//		add_option( 'a2cron-set', '0');
+//		add_option( 'a2icron-period', '');
+//		register_setting( 'a2icron', 'a2cron-set' );
+//		register_setting( 'a2icron', 'a2cron-period' );
 	}
 
 	public static function register_plugin_settings() {

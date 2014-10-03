@@ -71,10 +71,10 @@
 				<td>
 					<fieldset name="some"><legend class="screen-reader-text"><span>Date Format</span></legend>
 						<?php $val = get_option('a2itime-period'); ?>
-						<label title="">
-							<input type="radio" name="a2itime-period" value="overall" <?php echo $val == 'overall' ? 'checked="checked"' : ''; ?>>
-							<span>Overall</span>
-						</label><br>
+<!--						<label title="">-->
+<!--							<input type="radio" name="a2itime-period" value="overall" --><?php //echo $val == 'overall' ? 'checked="checked"' : ''; ?>
+<!--							<span>Overall</span>-->
+<!--						</label><br>-->
 						<label title="">
 							<input type="radio" name="a2itime-period" value="select" <?php echo $val == 'select' ? 'checked="checked"' : ''; ?>>
 							<span>From <input id="a2itime-from" name="a2itime-from" value="<?php echo get_option('a2itime-from'); ?>" type="date"> To <input id="a2itime-to" value="<?php echo get_option('a2itime-to'); ?>" name="a2itime-to" type="date"></span>
@@ -88,32 +88,32 @@
 
 </form>
 
-<form method="post" action="options.php" novalidate="novalidate">
-	<br>
-	<h3>Cron Settings</h3>
-	<hr>
-	<?php settings_fields('a2icron'); ?>
-	<?php do_settings_sections('a2icron'); ?>
-	<table class="form-table">
-		<tbody>
-		<tr>
-			<th scope="row">Select time period</th>
-			<td>
-				<fieldset name="some">
-					<?php $val = get_option('a2icron-set'); ?>
-					<label title="">
-						<input type="radio" name="a2icron-set" value="true" <?php echo $val == 'true' ? 'checked="checked"' : ''; ?>>
-						<span>Overall</span>
-					</label><br>
-					<label title="">
-						<input type="radio" name="a2icron-set" value="false" <?php echo $val == 'false' ? 'checked="checked"' : ''; ?>>
-						<span>Every <input id="a2icron-period" name="a2icron-period" value="<?php echo get_option('a2icron-period'); ?>" type="number"> hours</span>
-					</label><br>
-				</fieldset>
-			</td>
-		</tr>
-		</tbody>
-	</table>
-
-	<?php submit_button(); ?>
-</form>
+<!-- Form for unimplemented cronjob setup -->
+<!--<form method="post" action="options.php" novalidate="novalidate">-->
+<!--	<br>-->
+<!--	<h3>Cron Settings</h3>-->
+<!--	<hr>-->
+<!--	--><?php //settings_fields('a2icron'); ?>
+<!--	--><?php //do_settings_sections('a2icron'); ?>
+<!--	<table class="form-table">-->
+<!--		<tbody>-->
+<!--		<tr>-->
+<!--			<th scope="row">Select time period</th>-->
+<!--			<td>-->
+<!--				<fieldset name="some">-->
+<!--					--><?php //$val = get_option('a2icron-set'); ?>
+<!--					<label title="">-->
+<!--						<input type="radio" name="a2icron-set" value="true" --><?php //echo $val == 'true' ? 'checked="checked"' : ''; ?>
+<!--						<span>Overall</span>-->
+<!--					</label><br>-->
+<!--					<label title="">-->
+<!--						<input type="radio" name="a2icron-set" value="false" --><?php //echo $val == 'false' ? 'checked="checked"' : ''; ?>
+<!--						<span>Every <input id="a2icron-period" name="a2icron-period" value="--><?php //echo get_option('a2icron-period'); ?><!--" type="number"> hours</span>-->
+<!--					</label><br>-->
+<!--				</fieldset>-->
+<!--			</td>-->
+<!--		</tr>-->
+<!--		</tbody>-->
+<!--	</table>-->
+<?php //submit_button(); ?>
+<!--</form>-->
